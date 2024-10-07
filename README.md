@@ -1,4 +1,4 @@
-# Web Application Description: Book Review
+# Bookwitter
 
 ## Overview
 The application is a book review that allows users to create, edit, and delete reviews of books they have read. Users can sign up, log in using email or social media accounts (Google and Facebook), and interact with reviews and profiles of other users. The platform aims to facilitate community discussions around books through reviews and comments.
