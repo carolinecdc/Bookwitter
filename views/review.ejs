@@ -1,0 +1,350 @@
+<%- include("partials/header.ejs") %>
+
+
+<body>
+    <% if (locals.book) { %>
+    <div class="px-4 py-5 my-5 text-center">        
+        <img class="d-block mx-auto mb-4" src="<%= book.cover_url %>" >
+        <h1 class="display-5 fw-bold text-body-emphasis"><%= book.title %></h1>
+        <h2><%= book.author %></h2>
+        <div class="col-lg-6 mx-auto">
+          <p class="lead mb-4"><%= book.review %></p>
+          <div class="btn-group">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" color="#fcd303" class="bi bi-star-fill" viewBox="0 0 16 16">
+                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+            </svg>
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">             
+                <p><%= book.rate %>/5</p>
+                <p> <%= book.username %> </p>    
+                <p id="time"></p>            
+            </div>            
+          </div>          
+        </div> 
+    </div>
+     <% }else { %>
+        <div class="px-4 py-5 my-5 text-center">
+            <img class="d-block mx-auto mb-4" src="/assets/images/owl.png" alt="" width="200" height="auto">
+            <h1 class="display-5 fw-bold text-body-emphasis">Couldn't find the Book 😥</h1>
+            <div class="col-lg-6 mx-auto">
+              <p class="lead mb-4"></p>              
+            </div>
+        </div>
+    <% } %>   
+
+<section class="gradient-custom">
+  <div class="container my-5 py-5">
+    <div class="row d-flex justify-content-center">
+      <div class="col-md-12 col-lg-10 col-xl-8">
+        <div class="card">
+          <div class="card-body p-4">
+            <h4 class="text-center mb-4 pb-2">Comments for this review</h4>
+               <% if (locals.comments) { %>
+                <div class="col"></div>
+                  <% if (comments.length > 0){ %>                                                      
+                        <div class="d-flex flex-start">
+                          <img class="rounded-circle shadow-1-strong me-3"
+                              src="/assets/images/engage.png" alt="avatar" width="auto"
+                              height="80" />
+                            <div class="flex-grow-1 flex-shrink-1">
+                              <div>
+                                 <!-- Reply button show if user is the same as the user comment and if is not have been deleted-->
+                                <% if (user && comments[0].user_comment != "This comment has been deleted.") { %>                                  
+                                  <div class="d-flex justify-content-between align-items-center">
+                                    <p class="mb-1">
+                                        @<%= comments[0].username %> <span class="small" id="time-<%= comments[0].id %>"></span>
+                                    </p>
+                                    <button id="replyButton0" type="button" class="btn btn-outline-dark btn-sm">reply</button>                                    
+                                  </div>
+                                  <p class="small mb-0"></p>
+                                    <%= comments[0].user_comment%>
+                                </p>
+                                <% } else { %>
+                                <div class="d-flex justify-content-between align-items-center">
+                                  <p class="mb-1">
+                                      @<%= comments[0].username %> <span class="small" id="time-<%= comments[0].id %>"></span>                                      
+                                  </p>
+                                 </div> 
+                                <p class="small mb-0">
+                                    <%= comments[0].user_comment%>
+                                </p>
+                                <% } %>
+                              </div>
+                              <!-- Delete Button-->
+                              <% if (user) { %>                                
+                                <% if (user.id === comments[0].user_id && comments[0].user_comment != "This comment has been deleted.") { %> 
+                                  <div>
+                                    <form action="/review/<%= book.id %>" method="POST">                            
+                                      <button id="deleteButton" type="submit" class="btn btn-outline-dark btn-sm" value="<%= comments[0].id %>" name="replyComment">Delete</button>                                      
+                                    </form>   
+                                  </div>                                 
+                                <% } %>
+                              <% } %>
+                          
+                                <% if (locals.replies) { %>
+                                  <% if (replies.length > 0){ %>
+                                      <% for (let i=0; i<1; i++){ %>
+                                        <% for (let h=0;  h<replies[i].length ; h++) { %>
+                                          <% if (comments[0].id === replies[i][h].comments_id) {%>
+                                            <div class="d-flex flex-start mt-4">
+                                              <a class="me-3" href="#">
+                                                <img class="rounded-circle shadow-1-strong"
+                                                  src="/assets/images/engage.png" alt="avatar"
+                                                  width="auto" height="60" />
+                                              </a>
+                                              <div class="flex-grow-1 flex-shrink-1">
+                                                <div>
+                                                  <div class="d-flex justify-content-between align-items-center">
+                                                    <p class="mb-1">
+                                                      @<%= replies[i][h].username %> <span class="small" id="timeReply-<%= replies[i][h].id %>"></span>
+                                                    </p>
+                                                  </div>
+                                                  <p class="small mb-0">
+                                                    <%= replies[i][h].user_reply %>
+                                                  </p>
+                                                </div>
+                                              </div> 
+                                              <!-- Delete reply-->
+                                                <% if (user) { %>                                
+                                                  <% if (user.id === replies[i][h].user_id && replies[i][h].user_reply != "This reply has been deleted.") { %>   
+                                                  <div>
+                                                    <form action="/review/<%= book.id %>" method="POST">                            
+                                                      <button id="deleteButton" type="submit" class="btn btn-outline-dark btn-sm" value="<%= replies[i][h].id %>" name="deleteReply">Delete</button>
+                                                    </form>   
+                                                  </div>  
+                                                  <% } %>
+                                                <% } %>                                            
+                                            </div>                                            
+                                          <% } %>
+                                        <% } %>
+                                      <% } %>
+                                  <% } %>
+                                <% } %>
+                                <% if (user) { %>
+                                  <% if (locals.book) { %> 
+                                    <div class="card-body" id="replyForm0" style="display: none;">                        
+                                    <form action="/review/<%= book.id %>" method="POST">
+                                     <div class="card-footer py-3 border-0 mt-4">
+                                          <div class="d-flex flex-start w-100">
+                                            <img class="rounded-circle shadow-1-strong me-3" src="/assets/images/engage.png" alt="owl image" width="auto" height="60">
+                                            <div data-mdb-input-init class="form-outline w-100">
+                                              <textarea class="form-control" id="textAreaExample" rows="4" name="replyForm" placeholder="Enter your message here..." maxlength="300" required></textarea>                                                                           
+                                            </div>
+                                          </div>                                  
+                                          <div class="float-end mt-2 pt-1">
+                                            <button type="submit" data-mdb-button-init="" data-mdb-ripple-init="" class="btn btn-outline-dark" data-mdb-button-initialized="true" aria-pressed="true" value="<%= comments[0].id %>" name="replyComment">Post comment</button>                                                                       
+                                          </div>                                   
+                                      </div>  
+                                    </form>  
+                                   </div>                              
+                                  <% } %>
+                            <% } %>
+                          </div>
+                        </div>
+                      
+                      <!-- Rest of the comments -->
+
+                        <% if (comments.length > 1) { %>
+                          <% for (let i= 1; i<comments.length; i++) { %>
+                            <div class="d-flex flex-start mt-4">
+                              <img class="rounded-circle shadow-1-strong me-3"
+                                src="/assets/images/engage.png" alt="avatar" width="auto"
+                                height="80" />
+                              <div class="flex-grow-1 flex-shrink-1">
+                                <div>
+                                  <% if (user && comments[i].user_comment != "This comment has been deleted.") { %> 
+                                    <div class="d-flex justify-content-between align-items-center">
+                                      <p class="mb-1">
+                                        @<%= comments[i].username %> <span class="small" id="time-<%= comments[i].id %>"></span>
+                                      </p>
+                                      <button id="replyButton<%=i%>" type="button" class="btn btn-outline-dark btn-sm">reply</button>                                
+                                    </div>                                 
+                                    <p class="small mb-0">
+                                      <%= comments[i].user_comment %>
+                                    </p>
+                                    <% } else { %>
+                                      <div class="d-flex justify-content-between align-items-center">
+                                        <p class="mb-1">
+                                            @<%= comments[i].username %> <span class="small" id="time-<%= comments[i].id %>"></span>
+                                        </p>
+                                       </div> 
+                                      <p class="small mb-0">
+                                          <%= comments[i].user_comment%>
+                                      </p>
+                                      <% } %>
+                                </div>
+                                <!-- Delete Button-->
+                                <% if (user) { %>                                
+                                  <% if (user.id === comments[i].user_id && comments[i].user_comment != "This comment has been deleted.") { %> 
+                                    <div>
+                                      <form action="/review/<%= book.id %>" method="POST">                            
+                                        <button id="deleteButton" type="submit" class="btn btn-outline-dark btn-sm" value="<%= comments[i].id %>" name="replyComment">Delete</button>
+                                      </form>   
+                                    </div>                                 
+                                  <% } %>
+                                <% } %>
+
+                                  <% if (locals.replies) { %>
+                                    <% if (replies.length > 0){ %>
+                                      <% for (let j=1; j<replies.length; j++){ %>
+                                        <% for (let k=0;  k<replies[j].length ; k++) { %>
+                                          <% if (comments[i].id === replies[j][k].comments_id) {%>
+                                              <div class="d-flex flex-start mt-4">
+                                                <a class="me-3" href="#">
+                                                  <img class="rounded-circle shadow-1-strong"
+                                                    src="/assets/images/engage.png" alt="avatar"
+                                                    width="auto" height="80" />
+                                                </a>
+                                                <div class="flex-grow-1 flex-shrink-1">
+                                                  <div>
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                      <p class="mb-1">
+                                                        @<%= replies[j][k].username %> <span class="small" id="timeReply-<%= replies[j][k].id %>"></span>
+                                                      </p>
+                                                    </div>
+                                                    <p class="small mb-0">
+                                                      <%= replies[j][k].user_reply %>
+                                                    </p>
+                                                  </div>
+                                                </div>
+                                                <% if (user) { %>                                
+                                                  <% if (user.id === replies[j][k].user_id && replies[j][k].user_reply != "This reply has been deleted.") { %>   
+                                                  <div>
+                                                    <form action="/review/<%= book.id %>" method="POST">                            
+                                                      <button id="deleteButton" type="submit" class="btn btn-outline-dark btn-sm" value="<%= replies[j][k].id %>" name="deleteReply">Delete</button>
+                                                    </form>   
+                                                  </div>  
+                                                  <% } %>
+                                                <% } %> 
+                                              </div>                                      
+                                          <% } %>
+                                        <% } %>
+                                      <% } %>
+                                     <% } %>
+                                  <% } %>
+                                  <% if (user) { %>
+                                    <% if (locals.book) { %> 
+                                      <div class="card-body" id="replyForm<%=i%>" style="display: none;">                        
+                                      <form action="/review/<%= book.id %>" method="POST">
+                                       <div class="card-footer py-3 border-0 mt-4">
+                                            <div class="d-flex flex-start w-100">
+                                              <img class="rounded-circle shadow-1-strong me-3" src="/assets/images/engage.png" alt="owl image" width="auto" height="60">
+                                              <div data-mdb-input-init class="form-outline w-100">
+                                                <textarea class="form-control" id="textAreaExample" rows="4" name="replyForm" placeholder="Enter your message here..." maxlength="300" required></textarea>                                                                           
+                                              </div>
+                                            </div>                                  
+                                            <div class="float-end mt-2 pt-1">
+                                              <button type="submit" data-mdb-button-init="" data-mdb-ripple-init="" class="btn btn-outline-dark" data-mdb-button-initialized="true" aria-pressed="true" value="<%= comments[i].id %>" name="replyComment">Post comment</button>                                                                       
+                                            </div>                                   
+                                        </div>  
+                                      </form>  
+                                     </div>                              
+                                    <% } %>
+                              <% } %>
+                              </div>
+                            </div>                            
+                          <% } %>
+                        <% } %>    
+                     </div>  
+
+                        
+                  <% } %>
+                  <% if (user) { %>
+                          <% if (locals.book) { %> 
+                            <div class="card-body" >                        
+                            <form id="commentform" action="/review/<%= book.id %>" method="POST">
+                             <div class="card-footer py-3 border-0 mt-4">
+                                  <div class="d-flex flex-start w-100">
+                                    <img class="rounded-circle shadow-1-strong me-3" src="/assets/images/engage.png" alt="owl image" width="auto" height="60">
+                                    <div data-mdb-input-init class="form-outline w-100">
+                                      <textarea class="form-control" id="textAreaExample" rows="4" name="postComment" placeholder="Enter your message here..." maxlength="300" required></textarea>                                                                           
+                                    </div>
+                                  </div>                                  
+                                  <div class="float-end mt-2 pt-1">
+                                    <button type="submit" data-mdb-button-init="" data-mdb-ripple-init="" class="btn btn-outline-dark" data-mdb-button-initialized="true" aria-pressed="true">Post comment</button>                                                                       
+                                  </div>                                   
+                              </div>  
+                            </form>  
+                           </div>                              
+                          <% } %>
+                    <% } %>
+                </div>
+              <% } %>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+<%- include("partials/footer.ejs") %> 
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script> 
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const comments = <%- JSON.stringify(comments) %>;
+    for (let i = 0; i < comments.length; i++){
+      let toggleButton = document.getElementById(`replyButton${i}`);
+      let form = document.getElementById(`replyForm${i}`);   
+
+      if (toggleButton && form) {
+        toggleButton.addEventListener("click", ()=>{
+          if (form.style.display === "none" || form.style.display === ""){
+            form.style.display = "block";
+            toggleButton.textContent = "reply"
+          }else{
+            form.style.display = "none";      
+          }        
+      });
+    }
+    } 
+});
+
+</script>
+
+<script> 
+  // Date stamps
+  const comments = <%- JSON.stringify(comments) %>;  
+  const replies = <%- JSON.stringify(replies) %>;  
+  const book = <%- JSON.stringify(book) %>;  
+  console.log(book)
+
+  function timeAgo(postTime) {
+    const currentTime = new Date();
+    const diffInSeconds = Math.floor((currentTime - new Date(postTime))/1000)    
+
+    if (diffInSeconds < 60) {
+        return `${diffInSeconds} seconds ago`;
+    }else if (diffInSeconds < 3600) {
+        const diffInMinutes = Math.floor(diffInSeconds / 60);
+        return `${diffInMinutes} minutes ago`;
+    } else if (diffInSeconds < 86400) {
+        const diffInHours = Math.floor(diffInSeconds / 3600);
+        return `${diffInHours} hours ago`;
+    } else {
+        const diffInDays = Math.floor(diffInSeconds / 86400);
+        return `${diffInDays} days ago`;
+    }
+    
+  }; 
+  comments.forEach(function(comment) {
+      document.getElementById(`time-${comment.id}`).textContent = `- ${timeAgo(comment.created_at)}.`;       
+  });
+
+  for (let i=0; i<replies.length; i++){
+    for (let h=0;  h<replies[i].length ; h++) {      
+          document.getElementById(`timeReply-${replies[i][h].id}`).textContent = `- ${timeAgo(replies[i][h].created_at)}.`;               
+    }
+  };
+
+  document.getElementById('time').textContent = ` - ${timeAgo(book.created_at)}.`  
+</script>
+
+</body>
+</html>
+
+

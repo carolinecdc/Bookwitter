@@ -1,0 +1,107 @@
+<%- include("partials/header.ejs") %>
+
+<body>
+
+    <div class="container col-xxl-8 px-4 py-5">
+        <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+          <div class="col-10 col-sm-8 col-lg-6">
+            <img src="/assets/images/engage.png" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="300" height="auto" loading="lazy">
+          </div>
+          <div class="col-lg-6">
+            <% if (locals.userInfo) { %>         
+              
+            <div class="my-5">                    
+              <form id="aboutform" action="/profile/edit" method="POST">                            
+                  <div class="form-floating">
+                      <input class="form-control" id="name" type="text" placeholder="Your name..." data-sb-validations="required" name="name" value="<%= userInfo.name %>"/>
+                      <label for="title">Name</label>
+                      <div class="invalid-feedback" data-sb-feedback="name:required">An Name is required.</div>
+                  </div> 
+                  <% if (locals.errorMessage) { %>                   
+                    
+                    <div class="form-floating">
+                      <input class="form-control alert alert-danger" id="userName" type="text" placeholder="Your name..." data-sb-validations="required" name="userName" value="<%= userInfo.username %>"/>
+                      <label for="title">Username Already Taken</label>
+                      <div class="invalid-feedback" data-sb-feedback="name:required">An Username is required.</div>
+                    </div>
+                  <% }else {%>                 
+                  <div class="form-floating">
+                    <input class="form-control" id="userName" type="text" placeholder="Your name..." data-sb-validations="required" name="userName" value="<%= userInfo.username %>"/>
+                    <label for="title">Username</label>
+                    <div class="invalid-feedback" data-sb-feedback="name:required">An Username is required.</div>
+                  </div> 
+                  <% } %>                 
+                  <div class="form-floating">
+                    <textarea class="form-control" id="about" placeholder="Enter your about here..." style="height: 12rem" data-sb-validations="required" name="about" maxlength="500" >"<%= userInfo.about %>"</textarea>
+                    <label for="message">About</label>
+                    <div class="invalid-feedback" data-sb-feedback="message:required">A text is required.</div>
+                  </div>
+                <br/> 
+                <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                  <button type="submit" class="btn btn-outline-dark btn-lg px-4 me-md-2" id="submitButton">Save</button>              
+                </div>                   
+              </form>
+            
+            <% } else { %>
+            <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3"> Test </h1>
+            <p class="lead">Quickly design and customize responsive mobile-first sites with Bootstrap, the world’s most popular front-end open source toolkit, featuring Sass variables and mixins, responsive grid system, extensive prebuilt components, and powerful JavaScript plugins.</p>
+            
+            <% } %>
+          </div>
+        </div>
+      </div>
+
+      <div class="album py-5 bg-body-tertiary">
+        <div class="container">      
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                <% if (locals.userReviews) { %>
+                  <% if (userReviews.length > 0) { %>
+                    <% userReviews.forEach(book => { %>
+                      <div class="col">
+                        <div class="card shadow-sm">
+                          <div style="width: 100%; height: 250px; overflow: hidden; display: flex; justify-content: center; align-items: center;">
+                            <img class="bd-placeholder-img card-img-top"
+                                src="<%= book.cover_url %>"
+                                role="img"
+                                aria-label="Placeholder: Thumbnail"
+                                style="max-width: 100%; max-height: 100%; object-fit: contain; object-position: center;"
+                                preserveAspectRatio="xMidYMid slice"
+                                focusable="false">
+                            </div>
+                          <div class="card-body">
+                            <a href="/review/<%= book.id %>" class="page-link d-block">                    
+                            <h2 style="text-align: center;"><%= book.title %></h2> </a>  
+                            <p class="card-text" style="text-align: center;"><%=book.review %></p>
+                            <div class="d-flex justify-content-between align-items-center">
+                              <div class="btn-group">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" color="#fcd303" class="bi bi-star-fill" viewBox="0 0 16 16">
+                                      <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                                  </svg>
+                                <p><%= book.rate %>/5</p>
+                              </div>
+                              <small class="text-body-secondary"><%= book.name %></small>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                          <a class="btn btn-outline-dark btn-lg px-4 me-md-2" href="/review-edit/<%= book.id %>">Edit</a>
+                          <form id="delete" action="/delete" method="POST" >
+                            <button type="submit" class="btn btn-outline-dark btn-lg px-4 me-md-2" name="deleteButton" value="<%= book.id %>">Delete</button>   
+                          </form>       
+                        </div>
+                      </div>
+                <% }); %>
+                <% } else { %>
+                  <div>
+                    <p> This user has not made any reviews yet! 😥</p>
+                </div>
+                <% } %>
+            </div> 
+            <% }; %>           
+          </div>
+        </div>
+
+<%- include("partials/footer.ejs") %> 
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script> 
+</body>

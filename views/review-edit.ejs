@@ -1,0 +1,92 @@
+<%- include("partials/header.ejs") %>
+
+
+<body>
+    <% if (locals.book) { %>
+    <div class="px-4 py-5 my-5 text-center">        
+        <img class="d-block mx-auto mb-4" src="<%= book.cover_url %>" >
+        <h1 class="display-5 fw-bold text-body-emphasis"><%= book.title %></h1>
+        <h2><%= book.author %></h2>
+                  
+        </div> 
+    </div>
+  
+     
+
+
+    <main class="mb-4">
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <p>Edit your Review! 👇</p>
+                    <div class="my-5">                    
+                        <form id="postform" action="/review-edit" method="POST">                           
+                            <div class="form-floating">
+                                <textarea class="form-control" id="message" placeholder="Enter your message here..." style="height: 12rem" data-sb-validations="required" name="bookReview" maxlength="498"><%= book.review %></textarea>
+                                
+                                <div class="invalid-feedback" data-sb-feedback="message:required">A text is required.</div>
+                            </div>
+                            <br />                      
+                            <!-- Submit Button-->
+                            <button class="btn btn-dark text-uppercase" id="submitButton" type="submit" name="editButton" value="<%= book.id %>">Edit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+   <% }else { %>
+        <div class="px-4 py-5 my-5 text-center">
+            <img class="d-block mx-auto mb-4" src="/assets/images/owl.png" alt="" width="200" height="auto">
+            <h1 class="display-5 fw-bold text-body-emphasis">Couldn't find the Book 😥</h1>
+            <div class="col-lg-6 mx-auto">
+              <p class="lead mb-4"></p>
+              
+            </div>
+          </div>
+    <% } %>
+
+    
+    <%- include("partials/footer.ejs") %>
+<script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+          const stars = document.querySelectorAll('.star');
+          const ratingValue = document.getElementById('rating-value');
+          const clearButton = document.getElementById('clear-rating');
+    
+          stars.forEach(star => {
+            star.addEventListener('click', () => {
+              const value = star.getAttribute('data-value');
+              ratingValue.value = value;
+              updateStars(value);
+            });
+    
+            star.addEventListener('mouseenter', () => {
+              const value = star.getAttribute('data-value');
+              updateStars(value);
+            });
+    
+            star.addEventListener('mouseleave', () => {
+              updateStars(ratingValue.value);
+            });
+          });
+    
+          
+    
+          function updateStars(value) {
+            stars.forEach(star => {
+              if (star.getAttribute('data-value') <= value) {
+                star.classList.add('checked');
+              } else {
+                star.classList.remove('checked');
+              }
+            });
+          }
+        });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script> 
+
+</body>
+</html> 
+
