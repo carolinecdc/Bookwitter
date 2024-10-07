@@ -92,7 +92,7 @@ To set up the Book Review Platform on your local machine, follow these steps:
    ![image](https://github.com/user-attachments/assets/a9146017-6293-4d26-b342-99c087f61f65)
 4. **Run Database Migrations Set up your PostgreSQL database and run the necessary migrations. **
 5. ** Start the Application. **
-   -npm start
+   ```-npm start
 6. ** Access the Application Open your web browser and go to http://localhost:3000. ** 
 
 
