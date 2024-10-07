@@ -88,11 +88,20 @@ To set up the Book Review Platform on your local machine, follow these steps:
    cd book-review-platform
 2. **Install Dependencies Ensure you have Node.js and PostgreSQL installed. Then run:**
    -npm install
-3. **Set Up Environment Variables Create a .env file in the root directory and configure your environment variables.**
-   ![image](https://github.com/user-attachments/assets/a9146017-6293-4d26-b342-99c087f61f65)
-4. **Run Database Migrations Set up your PostgreSQL database and run the necessary migrations. **
-5. ** Start the Application. **
-   ```-npm start
-6. ** Access the Application Open your web browser and go to http://localhost:3000. ** 
+3. **Set Up Environment Variables Create a .env file in the root directory and configure your environment variables.**   
+   ```bash
+   PORT=3000
+   DATABASE_URL=postgres://user:password@localhost:5432/database_name
+   SESSION_SECRET=your_session_secret
+   GOOGLE_CLIENT_ID=your_google_client_id
+   GOOGLE_CLIENT_SECRET=your_google_client_secret
+   FACEBOOK_APP_ID=your_facebook_app_id
+   FACEBOOK_APP_SECRET=your_facebook_app_secret
+
+5. **Run Database Migrations Set up your PostgreSQL database and run the necessary migrations. **
+6. ** Start the Application. **
+   ```bash
+   -npm start
+7. ** Access the Application Open your web browser and go to http://localhost:3000. ** 
 
 
