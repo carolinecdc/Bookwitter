@@ -41,7 +41,7 @@ The application is a book review that allows users to create, edit, and delete r
 - Users can view their profile, edit their details (like name, about section, and username), and see the reviews they have created.
 - Users can search for other profiles by their username.
 
-  ![image](https://github.com/user-attachments/assets/5622552c-6665-4070-9902-df3572506d03)
+  ![image](https://github.com/user-attachments/assets/f54adab1-024f-4dda-9e1f-3270a61551f6)
 
 
 ### Book Search
